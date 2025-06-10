@@ -3,6 +3,11 @@ WireMockGradleSample
 
 A Sample Project for WireMock with Gradle
 
+TODO:
+
+- [ ] Dynamic Fake
+- [ ] Auto Reload
+
 ## License
 ```text
 Copyright (C) 2025 RyuNen344

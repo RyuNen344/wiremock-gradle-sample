@@ -1,0 +1,85 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+plugins {
+    id 'application'
+    alias libs.plugins.org.jetbrains.kotlin.jvm
+    alias libs.plugins.nl.littlerobots.version.catalog.update
+    alias libs.plugins.org.openapi.generator
+    alias libs.plugins.com.diffplug.spotless
+}
+
+kotlin {
+    compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+    sourceSets {
+        main.kotlin.srcDirs += project.layout.buildDirectory.dir("generated/openapi/src/main/kotlin")
+    }
+}
+
+application {
+    mainClass = 'io.github.ryunen344.gradle.wiremock.Main'
+    applicationDefaultJvmArgs = [
+        '-Dorg.slf4j.simpleLogger.defaultLogLevel=INFO'
+    ]
+}
+
+run {
+    args '--port=8080'
+    args '--verbose'
+    args "--root-dir=${project.layout.projectDirectory.dir("src/main/resources").asFile.path}"
+}
+
+tasks.withType(KotlinJvmCompile).configureEach {
+    dependsOn(tasks.named("openApiGenerate"))
+}
+
+dependencies {
+    implementation libs.com.fasterxml.jackson.databind
+    implementation libs.org.wiremock.jetty
+    implementation libs.org.slf4j.simple
+}
+
+openApiGenerate {
+    verbose.set(false)
+    cleanupOutput.set(true)
+    generatorName.set("kotlin-wiremock")
+    inputSpec.set(project.layout.settingsDirectory.file("petstore.yaml").asFile.path)
+    outputDir.set(project.layout.buildDirectory.dir("generated/openapi").orNull.asFile.path)
+    apiPackage.set("org.openapi.example.api")
+    modelPackage.set("org.openapi.example.model")
+    configOptions = [
+        dateLibrary: "java8",
+    ]
+    globalProperties = [
+        apis  : "",
+        models: "",
+    ]
+}
+
+spotless {
+    format 'misc', {
+        // define the files (e.g. '*.gradle', '*.md') to apply `misc` to
+        target '.gitignore'
+        targetExclude '.idea'
+        trimTrailingWhitespace()
+        leadingTabsToSpaces()
+        endWithNewline()
+    }
+
+    kotlin {
+        ktfmt().kotlinlangStyle().configure {
+            it.setMaxWidth(140)
+            it.setBlockIndent(4)
+            it.setContinuationIndent(4)
+            it.setRemoveUnusedImports(true)
+            it.setManageTrailingCommas(true)
+        }
+    }
+}
+
+versionCatalogUpdate {
+    sortByKey = true
+    keep {
+        keepUnusedVersions = true
+    }
+}
