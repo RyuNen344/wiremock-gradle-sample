@@ -1,0 +1,20 @@
+[versions]
+jackson = "2.17.1"
+jdk = "17"
+kotlin = "2.1.21"
+openapi-generator = "7.13.0"
+slf4j = "2.0.17"
+version-catalog-update = "1.0.0"
+wiremock = "3.13.0"
+spotless = "7.0.4"
+
+[libraries]
+com-fasterxml-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+org-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+org-wiremock-jetty = { module = "org.wiremock:wiremock-jetty12", version.ref = "wiremock" }
+
+[plugins]
+nl-littlerobots-version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
+org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+org-openapi-generator = { id = "org.openapi.generator", version.ref = "openapi-generator" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
