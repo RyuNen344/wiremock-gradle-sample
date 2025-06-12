@@ -1,52 +1,65 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.openapitools.generator.gradle.plugin.OpenApiGeneratorPlugin
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
-    id 'application'
     alias libs.plugins.org.jetbrains.kotlin.jvm
+    alias libs.plugins.org.jetbrains.kotlin.plugin.spring
+    alias libs.plugins.org.springframework.boot
     alias libs.plugins.nl.littlerobots.version.catalog.update
     alias libs.plugins.org.openapi.generator
     alias libs.plugins.com.diffplug.spotless
 }
 
 kotlin {
-    compilerOptions.jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
-    sourceSets {
-        main.kotlin.srcDirs += project.layout.buildDirectory.dir("generated/openapi/src/main/kotlin")
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+        freeCompilerArgs = [
+            '-Xjsr305=strict',
+        ]
     }
 }
 
-application {
-    mainClass = 'io.github.ryunen344.gradle.wiremock.Main'
-    applicationDefaultJvmArgs = [
-        '-Dorg.slf4j.simpleLogger.defaultLogLevel=INFO'
-    ]
-}
-
-run {
-    args '--port=8080'
-    args '--verbose'
-    args "--root-dir=${project.layout.projectDirectory.dir("src/main/resources").asFile.path}"
-}
-
-tasks.withType(KotlinJvmCompile).configureEach {
-    dependsOn(tasks.named("openApiGenerate"))
+sourceSets.main {
+    java.srcDirs += project.layout.buildDirectory.dir("generated/openapi/stub/src/main/java")
+    kotlin.srcDirs += project.layout.buildDirectory.dir("generated/openapi/model/src/main/kotlin")
 }
 
 dependencies {
+    implementation libs.org.springframework.boot.devtools
+    implementation libs.org.springframework.boot.starter
     implementation libs.com.fasterxml.jackson.databind
+    // for @Nullable annotation
+    implementation libs.com.google.findbugs
     implementation libs.org.wiremock.jetty
-    implementation libs.org.slf4j.simple
 }
 
-openApiGenerate {
-    verbose.set(false)
-    cleanupOutput.set(true)
-    generatorName.set("kotlin-wiremock")
-    inputSpec.set(project.layout.settingsDirectory.file("petstore.yaml").asFile.path)
-    outputDir.set(project.layout.buildDirectory.dir("generated/openapi").orNull.asFile.path)
-    apiPackage.set("org.openapi.example.api")
-    modelPackage.set("org.openapi.example.model")
+bootRun {
+    // wiremock options
+    args = [
+        '--port=8080',
+        '--verbose',
+        "--root-dir=${project.layout.projectDirectory.dir("src/main/resources").asFile.path}"
+    ]
+    jvmArgs = [
+        '-Dorg.slf4j.simpleLogger.defaultLogLevel=TRACE'
+    ]
+}
+
+def openApiGeneratesTask = tasks.register("openApiGenerates") {
+    outputs.cacheIf { false }
+    group = OpenApiGeneratorPlugin.pluginGroup
+    dependsOn(tasks.withType(GenerateTask).matching { !it.name.endsWith("openApiGenerate") })
+}
+
+tasks.withType(KotlinJvmCompile).configureEach {
+    dependsOn(openApiGeneratesTask)
+}
+
+tasks.register("openApiGenerateStub", GenerateTask) { task ->
+    generatorName.set("java-wiremock")
+    outputDir.set(project.layout.buildDirectory.dir("generated/openapi/stub").orNull.asFile.path)
     configOptions = [
         dateLibrary: "java8",
     ]
@@ -54,6 +67,29 @@ openApiGenerate {
         apis  : "",
         models: "",
     ]
+    tasks.named("spotlessJava").orNull.dependsOn(task)
+}
+
+tasks.register("openApiGenerateModel", GenerateTask) { task ->
+    generatorName.set("kotlin-wiremock")
+    outputDir.set(project.layout.buildDirectory.dir("generated/openapi/model").orNull.asFile.path)
+    configOptions = [
+        dateLibrary: "java8",
+    ]
+    globalProperties = [
+        apis  : "",
+        models: "",
+    ]
+    tasks.named("spotlessKotlin").orNull.dependsOn(task)
+}
+
+tasks.withType(GenerateTask).configureEach {
+    group = OpenApiGeneratorPlugin.pluginGroup
+    verbose.set(false)
+    cleanupOutput.set(true)
+    inputSpec.set(project.layout.settingsDirectory.file("petstore.yaml").asFile.path)
+    apiPackage.set("org.openapi.example.api")
+    modelPackage.set("org.openapi.example.model")
 }
 
 spotless {
@@ -64,6 +100,10 @@ spotless {
         trimTrailingWhitespace()
         leadingTabsToSpaces()
         endWithNewline()
+    }
+
+    java {
+        googleJavaFormat().aosp().reorderImports(true)
     }
 
     kotlin {

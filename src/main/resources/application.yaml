@@ -1,0 +1,7 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+      log-condition-evaluation-delta: true
+      exclude: "static/**,public/**"
+      trigger-file: .reloadtrigger

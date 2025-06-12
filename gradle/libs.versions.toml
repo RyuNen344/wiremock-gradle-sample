@@ -1,20 +1,27 @@
 [versions]
+findbugs = "3.0.2"
 jackson = "2.19.0"
 jdk = "17"
 kotlin = "2.1.21"
 openapi-generator = "7.13.0"
 slf4j = "2.0.17"
 spotless = "7.0.4"
+spring-boot = "3.5.0"
 version-catalog-update = "1.0.0"
 wiremock = "3.13.0"
 
 [libraries]
 com-fasterxml-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+com-google-findbugs = { module = "com.google.code.findbugs:jsr305", version.ref = "findbugs" }
 org-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+org-springframework-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
+org-springframework-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot" }
 org-wiremock-jetty = { module = "org.wiremock:wiremock-jetty12", version.ref = "wiremock" }
 
 [plugins]
 com-diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 nl-littlerobots-version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+org-jetbrains-kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 org-openapi-generator = { id = "org.openapi.generator", version.ref = "openapi-generator" }
+org-springframework-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
