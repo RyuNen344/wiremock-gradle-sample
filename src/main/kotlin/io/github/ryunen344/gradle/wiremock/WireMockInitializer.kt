@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2025 RyuNen344
+ * Copyright (C) 2025 RyuNen344
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,19 @@
 
 package io.github.ryunen344.gradle.wiremock
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import com.github.tomakehurst.wiremock.WireMockServer
+import jakarta.annotation.PreDestroy
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.stereotype.Component
 
-@SpringBootApplication
-object WireMockApplication {
-    @JvmStatic
-    fun main(vararg args: String) {
-        runApplication<WireMockApplication>(*args)
+@Component
+class WireMockInitializer(private val server: WireMockServer) : InitializingBean {
+    override fun afterPropertiesSet() {
+        server.start()
+    }
+
+    @PreDestroy
+    fun destroy() {
+        server.stop()
     }
 }
