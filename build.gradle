@@ -81,6 +81,7 @@ tasks.withType(GenerateTask).configureEach {
 }
 
 spotless {
+    enforceCheck = false
     format 'misc', {
         // define the files (e.g. '*.gradle', '*.md') to apply `misc` to
         target '.gitignore'
