@@ -8,7 +8,7 @@ slf4j = "2.0.17"
 spotless = "7.0.4"
 spring-boot = "3.5.0"
 version-catalog-update = "1.0.0"
-wiremock = "3.13.0"
+wiremock = "3.13.1"
 
 [libraries]
 com-fasterxml-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
