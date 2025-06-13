@@ -13,7 +13,7 @@ A Sample Project for WireMock with Gradle
 
 ### How to Run
 
-#### Use Gradle
+#### Gradle
 
 ```shell
 ./gradlew classes -t & ./gradlew bootRun
