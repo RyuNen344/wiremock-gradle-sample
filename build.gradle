@@ -35,18 +35,6 @@ dependencies {
     implementation libs.org.wiremock.jetty
 }
 
-bootRun {
-    // wiremock options
-    args = [
-        '--port=8080',
-        '--verbose',
-        "--root-dir=${project.layout.projectDirectory.dir("src/main/resources").asFile.path}"
-    ]
-    jvmArgs = [
-        '-Dorg.slf4j.simpleLogger.defaultLogLevel=TRACE'
-    ]
-}
-
 def openApiGeneratesTask = tasks.register("openApiGenerates") {
     outputs.cacheIf { false }
     group = OpenApiGeneratorPlugin.pluginGroup
