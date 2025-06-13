@@ -1,0 +1,57 @@
+# $schema: https://json.schemastore.org/github-workflow.json
+name: check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+concurrency:
+  group: ${{ github.workflows }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  checks: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: ./.github/actions/java
+      - uses: ./.github/actions/gradle
+      - name: run spotlessCheck
+        id: spotless
+        continue-on-error: true
+        shell: bash
+        run: |
+          ./gradlew spotlessCheck
+
+      # check build
+      - name: run build
+        if: ${{ steps.spotless.outcome == 'success' }}
+        run: |
+          ./gradlew build
+
+      # format code and build
+      - name: run spotlessApply
+        if: ${{ steps.spotless.outcome == 'failure' }}
+        run: |
+          ./gradlew spotlessApply build
+      - name: commit spotless changes
+        if: ${{ steps.spotless.outcome == 'failure' }}
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: 'chore: apply spotless changes'
+          commit_author: github-actions[bot] <"41898282+github-actions[bot]@users.noreply.github.com>
