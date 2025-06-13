@@ -1,0 +1,14 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+      log-condition-evaluation-delta: true
+      trigger-file: .reloadtrigger
+
+wiremock:
+  verbose: true
+  port: 8080
+  dir: "wiremock"
+  async: true
+  record: true
+  proxy: null
