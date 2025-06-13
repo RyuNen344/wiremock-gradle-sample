@@ -99,7 +99,7 @@ spotless {
         ktfmt().kotlinlangStyle().configure {
             it.setMaxWidth(140)
             it.setRemoveUnusedImports(true)
-            it.setManageTrailingCommas(true)
+            it.setManageTrailingCommas(false)
         }
     }
 }

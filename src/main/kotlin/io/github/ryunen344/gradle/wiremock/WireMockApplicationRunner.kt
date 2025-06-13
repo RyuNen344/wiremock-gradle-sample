@@ -22,6 +22,7 @@ package io.github.ryunen344.gradle.wiremock
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.common.Json
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
+import kotlin.system.exitProcess
 import org.openapi.example.api.PetApiStubs
 import org.openapi.example.api.StoreApiMockServer
 import org.openapi.example.model.Order
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.stereotype.Component
-import kotlin.system.exitProcess
 
 @Component
 class WireMockApplicationRunner(private val server: WireMockServer) : ApplicationRunner {
