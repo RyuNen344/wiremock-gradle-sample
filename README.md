@@ -21,7 +21,8 @@ A Sample Project for WireMock with Gradle
 
 #### IntelliJ IDEA
 
-`Preferences > Build,Execution,Deployment > Compiler > Build Project automatically`
+1. set `Preferences > Build,Execution,Deployment > Compiler > Build Project automatically`
+2. run `bootRun` task
 
 ### Options
 
