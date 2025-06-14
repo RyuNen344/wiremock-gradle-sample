@@ -8,4 +8,4 @@ runs:
       uses: actions/setup-java@v4
       with:
         distribution: "temurin"
-        java-version-file: ".sdkmanrc"
+        java-version: "17"

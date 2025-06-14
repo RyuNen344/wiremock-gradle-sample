@@ -19,6 +19,7 @@ kotlin {
             '-Xjsr305=strict',
         ]
     }
+    jvmToolchain(17)
 }
 
 sourceSets.main {
