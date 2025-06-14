@@ -7,4 +7,5 @@ runs:
     - name: setup JDK
       uses: actions/setup-java@v4
       with:
+        distribution: "temurin"
         java-version-file: ".tool-versions"
