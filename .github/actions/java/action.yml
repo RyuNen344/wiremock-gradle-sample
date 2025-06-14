@@ -6,3 +6,5 @@ runs:
   steps:
     - name: setup JDK
       uses: actions/setup-java@v4
+      with:
+        java-version-file: ".tool-versions"
