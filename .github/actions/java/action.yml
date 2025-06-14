@@ -6,6 +6,3 @@ runs:
   steps:
     - name: setup JDK
       uses: actions/setup-java@v4
-      with:
-        distribution: "temurin"
-        java-version: "17"
