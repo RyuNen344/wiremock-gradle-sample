@@ -13,8 +13,8 @@ on:
       - reopened
 
 concurrency:
-  group: ${{ github.workflows }}-${{ github.head_ref || github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'main')}}
 
 permissions:
   contents: write
