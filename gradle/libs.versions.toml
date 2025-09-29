@@ -7,7 +7,7 @@ openapi-generator = "7.16.0"
 slf4j = "2.0.17"
 spotless = "7.2.1"
 spring-boot = "3.5.6"
-version-catalog-update = "1.0.0"
+version-catalog-update = "1.0.1"
 wiremock = "3.13.1"
 
 [libraries]
