@@ -51,7 +51,7 @@ jobs:
           ./gradlew spotlessApply build
       - name: commit spotless changes
         if: ${{ steps.spotless.outcome == 'failure' }}
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'chore: apply spotless changes'
           commit_author: github-actions[bot] <"41898282+github-actions[bot]@users.noreply.github.com>
