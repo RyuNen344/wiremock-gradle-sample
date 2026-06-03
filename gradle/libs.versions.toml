@@ -2,7 +2,7 @@
 findbugs = "3.0.2"
 jackson = "2.21.3"
 jdk = "17"
-kotlin = "2.3.21"
+kotlin = "2.4.0"
 openapi-generator = "7.21.0"
 slf4j = "2.0.18"
 spotless = "7.2.1"
