@@ -1,6 +1,6 @@
 [versions]
 findbugs = "3.0.2"
-jackson = "2.22.1"
+jackson = "2.22.2"
 jdk = "17"
 kotlin = "2.4.10"
 openapi-generator = "7.24.0"
